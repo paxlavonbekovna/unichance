@@ -28,6 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://mohera-unichance.up.railway.app',
+    'https://mohera-unichance-production.up.railway.app'
+]
+
 
 # Application definition
 
