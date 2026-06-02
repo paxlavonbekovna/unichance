@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniChance - Document Repository</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#090d16] text-slate-300 antialiased">
+
+<div class="min-h-screen flex flex-col md:flex-row w-full">
+
+    <aside class="w-full md:w-64 bg-[#131b2e] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex md:flex-col justify-between items-center md:items-stretch sticky top-0 z-50 md:h-screen">
+        
+        <div class="flex items-center justify-between w-full md:w-auto">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-white text-sm tracking-tight">UniChance</h1>
+                    <p class="text-[9px] uppercase tracking-widest text-slate-500 font-bold">Predictor V2.0</p>
+                </div>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-3">
+                <a href="/profile/" class="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold font-mono uppercase">
+                    {{ request.user.username|slice:":1"|default:"U" }}
+                </a>
+                <a href="/logout/" class="text-rose-400 text-sm pl-1"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-3 mt-6 p-2.5 bg-[#090d16]/40 border border-slate-800/50 rounded-xl">
+            <a href="/profile/" class="group relative w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-blue-500/10 overflow-hidden">
+                <span class="group-hover:opacity-0 uppercase transition-opacity duration-150">{{ request.user.username|slice:":1"|default:"U" }}</span>
+                <i class="fa-solid fa-user text-[10px] absolute opacity-0 group-hover:opacity-100 transition-opacity duration-150"></i>
+            </a>
+            <div class="truncate">
+                <p class="text-xs font-bold text-white tracking-tight truncate">{{ request.user.username|default:"Active Student" }}</p>
+                <a href="/profile/" class="text-[10px] text-blue-400 hover:text-blue-300 font-medium tracking-tight flex items-center gap-1 mt-0.5 transition-colors">
+                    Edit Profile <i class="fa-solid fa-angle-right text-[8px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <nav class="hidden md:flex flex-col gap-2 mt-6 flex-1">
+            <a href="/" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-[#1c2842] hover:text-white transition-all rounded-xl text-xs font-medium">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="/universities/" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-[#1c2842] hover:text-white transition-all rounded-xl text-xs font-medium">
+                <i class="fa-solid fa-building-columns"></i> Universities
+            </a>
+            <a href="/dashboard/documents/" class="flex items-center gap-3 px-4 py-3 bg-blue-500/10 text-white border border-blue-500/20 rounded-xl text-xs font-semibold">
+                <i class="fa-solid fa-folder-open"></i> Doc Examples
+            </a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-3 pt-4 border-t border-slate-800/60 text-xs">
+            <a href="/logout/" class="flex items-center gap-2 text-slate-500 hover:text-rose-400 font-bold transition-all">
+                <i class="fa-solid fa-power-off"></i> LOG OUT
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full md:h-screen md:overflow-y-auto">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+            <div>
+                <h2 class="text-xl font-black text-white tracking-tight">Document Examples</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Review verified templates for elite university applications.</p>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-[#131b2e] border border-slate-800/60 p-1 rounded-xl text-xs self-start sm:self-auto">
+                <button onclick="filterDocs('all')" class="doc-tab-btn px-3 py-1.5 rounded-lg font-semibold bg-blue-500 text-white transition-all">All</button>
+                <button onclick="filterDocs('sop')" class="doc-tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition-all">SOP</button>
+                <button onclick="filterDocs('lor')" class="doc-tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition-all">LOR</button>
+                <button onclick="filterDocs('cv')" class="doc-tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition-all">CV/Resume</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="doc-card w-full bg-[#131b2e] border border-slate-800/80 hover:border-slate-700/60 transition-all rounded-2xl p-5 flex flex-col justify-between space-y-5 shadow-xl" data-category="sop">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">Statement of Purpose</span>
+                        <span class="text-xs font-mono text-slate-500">PDF Format</span>
+                    </div>
+                    <h3 class="font-bold text-white text-base tracking-tight pt-1">Harvard SEAS SOP Template</h3>
+                    <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">A pristine example of a Computer Science statement of purpose focusing on undergraduate research projects, algorithmic models, and long-term academic targets.</p>
+                </div>
+                <div class="pt-4 border-t border-slate-800/40 flex items-center justify-between text-xs">
+                    <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-regular fa-file-lines text-slate-600"></i> 1,200 words</span>
+                    <a href="#" class="bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white transition-all px-3 py-2 rounded-xl font-medium tracking-tight flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-down-to-line text-[11px]"></i> Download Example
+                    </a>
+                </div>
+            </div>
+
+            <div class="doc-card w-full bg-[#131b2e] border border-slate-800/80 hover:border-slate-700/60 transition-all rounded-2xl p-5 flex flex-col justify-between space-y-5 shadow-xl" data-category="lor">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-md border border-purple-500/20">Letter of Recommendation</span>
+                        <span class="text-xs font-mono text-slate-500">DOCX Format</span>
+                    </div>
+                    <h3 class="font-bold text-white text-base tracking-tight pt-1">Academic LOR (Professor)</h3>
+                    <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">A glowing endorsement structural guide written by a Senior Faculty Dean highlighting research capabilities, technical class presence, and peer teamwork.</p>
+                </div>
+                <div class="pt-4 border-t border-slate-800/40 flex items-center justify-between text-xs">
+                    <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-regular fa-file-lines text-slate-600"></i> 450 words</span>
+                    <a href="#" class="bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white transition-all px-3 py-2 rounded-xl font-medium tracking-tight flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-down-to-line text-[11px]"></i> Download Example
+                    </a>
+                </div>
+            </div>
+
+            <div class="doc-card w-full bg-[#131b2e] border border-slate-800/80 hover:border-slate-700/60 transition-all rounded-2xl p-5 flex flex-col justify-between space-y-5 shadow-xl" data-category="cv">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Academic CV</span>
+                        <span class="text-xs font-mono text-slate-500">LaTeX Format</span>
+                    </div>
+                    <h3 class="font-bold text-white text-base tracking-tight pt-1">MIT Standard Tech Resume</h3>
+                    <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">Clean, chronological 1-page LaTeX template formatted exactly to match expectations for elite US science, mathematics, and engineering submissions.</p>
+                </div>
+                <div class="pt-4 border-t border-slate-800/40 flex items-center justify-between text-xs">
+                    <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-regular fa-file-lines text-slate-600"></i> 1 Page Max</span>
+                    <a href="#" class="bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white transition-all px-3 py-2 rounded-xl font-medium tracking-tight flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-down-to-line text-[11px]"></i> Download Example
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    function filterDocs(category) {
+        const buttons = document.querySelectorAll('.doc-tab-btn');
+        buttons.forEach(btn => {
+            if (btn.innerText.toLowerCase().includes(category) || (category === 'all' && btn.innerText === 'All')) {
+                btn.classList.add('bg-blue-500', 'text-white');
+                btn.classList.remove('text-slate-400', 'hover:text-white');
+            } else {
+                btn.classList.remove('bg-blue-500', 'text-white');
+                btn.classList.add('text-slate-400', 'hover:text-white');
+            }
+        });
+
+        const cards = document.querySelectorAll('.doc-card');
+        cards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+</script>
+</body>
+</html>
